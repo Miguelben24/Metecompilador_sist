@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metacompilador — Generador de Compiladores</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="brand">Metacompilador</div>
+  <div class="navlinks">
+    <a href="#conceptos">Conceptos</a>
+    <a href="#playground">Playground</a>
+    <a href="#equipo">Equipo</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="eyebrow">Autómata de estados · pipeline de tres etapas</div>
+  <h1>Metacompilador<br><span>generador de compiladores a medida</span></h1>
+  <p class="lede">
+    Escribe la especificación de tu lenguaje en un <code>config.txt</code> (palabras clave, símbolos
+    y tabla de transiciones ITT), valídala, genera un compilador en C++ hecho a tu medida, y
+    pruébalo en vivo — todo en el navegador, sin backend.
+  </p>
+
+  <div class="pipeline">
+    <b>01 especificación</b> <span class="arrow">→</span>
+    <b>02 compilador generado</b> <span class="arrow">→</span>
+    <b>03 probador en vivo</b>
+  </div>
+
+  <div class="hero-cta">
+    <a class="btnlink" href="#playground">Ir al playground →</a>
+    <a class="btnlink alt" href="#conceptos">Ver los conceptos</a>
+  </div>
+
+  <!-- ============ CONCEPTOS ============ -->
+  <div class="section-head" id="conceptos">
+    <span class="fig">Fig. 00</span>
+    <h2>Tres bloques, un autómata completo</h2>
+    <p>Cada bloque de <code>config.txt</code> alimenta una parte distinta del compilador que se genera al final.</p>
+  </div>
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <div class="ck">BLOQUE · PC</div>
+      <h3>Palabras clave</h3>
+      <p>Declara los verbos de tu lenguaje (<code>mostrar</code>, <code>si</code>, <code>repetir</code>...) y el número de token que le corresponde a cada una.</p>
+    </div>
+    <div class="concept-card">
+      <div class="ck">BLOQUE · S</div>
+      <h3>Símbolos</h3>
+      <p>Declara los operadores y signos (<code>=</code>, <code>+</code>, <code>;</code>...) que el lexer generado va a reconocer como un solo carácter.</p>
+    </div>
+    <div class="concept-card">
+      <div class="ck">BLOQUE · ITT</div>
+      <h3>Transiciones</h3>
+      <p>Describe, estado por estado, cómo se encadenan las palabras clave y símbolos — esa tabla es la que termina compilada como tu autómata sintáctico.</p>
+    </div>
+  </div>
+
+  <!-- ============ SHEET 1 ============ -->
+  <section class="sheet" id="playground">
+    <div class="sheet-head">
+      <span class="fig">Fig. 01</span>
+      <span class="sheet-title">Especificación — config.txt</span>
+    </div>
+    <p class="sheet-desc">
+      Corre léxico, sintáctico y semántico sobre tu especificación. Si es válida, se habilitan
+      las siguientes etapas.
+    </p>
+
+    <label class="field-label" for="cfgInput">contenido de config.txt</label>
+    <textarea id="cfgInput" spellcheck="false"></textarea>
+
+    <div class="row">
+      <button id="btnValidar">Validar especificación</button>
+      <span class="hint" id="cfgStatus"></span>
+    </div>
+
+    <div class="output" id="cfgOutput">
+      <div class="verdict" id="cfgVerdict"></div>
+      <ul class="errlist" id="cfgErrors" style="display:none;"></ul>
+
+      <div class="tables-grid" id="cfgTablesWrap" style="display:none;">
+        <div>
+          <table>
+            <thead><tr><th>Palabra clave</th><th>Token</th></tr></thead>
+            <tbody id="tblPC"></tbody>
+          </table>
+        </div>
+        <div>
+          <table>
+            <thead><tr><th>Símbolo</th><th>Token</th></tr></thead>
+            <tbody id="tblSim"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <details id="detTransiciones" style="display:none;">
+        <summary>Tabla de transiciones dinámicas (ITT)</summary>
+        <div class="log">
+          <table id="tblTrans"><thead><tr><th>Origen</th><th>Condición</th><th>Destino</th></tr></thead><tbody></tbody></table>
+        </div>
+      </details>
+
+      <details id="detTrace">
+        <summary>Traza del autómata (léxico + sintáctico)</summary>
+        <div class="log" id="cfgTrace"></div>
+      </details>
+    </div>
+    <div class="c2"></div>
+  </section>
+
+  <!-- ============ SHEET 2 ============ -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="fig">Fig. 02</span>
+      <span class="sheet-title">Compilador generado (.cpp)</span>
+    </div>
+    <p class="sheet-desc">
+      A partir de las palabras clave, símbolos y transiciones válidas, arma el código fuente
+      de un compilador C++ nuevo y compilable para tu lenguaje.
+    </p>
+
+    <div class="row">
+      <button id="btnGenerar" disabled>Generar código C++</button>
+      <button id="btnDescargar" class="ghost" disabled>Descargar compilador_generado.cpp</button>
+      <span class="hint" id="genStatus">valida la especificación primero</span>
+    </div>
+
+    <div class="output" id="genOutput">
+      <div class="codebox" id="genCode"></div>
+    </div>
+    <div class="c2"></div>
+  </section>
+
+  <!-- ============ SHEET 3 ============ -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="fig">Fig. 03</span>
+      <span class="sheet-title">Probador en vivo</span>
+    </div>
+    <p class="sheet-desc">
+      Corre el autómata generado sobre un programa de prueba escrito en tu propio lenguaje,
+      directamente en el navegador — es la misma lógica que llevaría <code>compilador_generado.cpp</code>.
+    </p>
+
+    <label class="field-label" for="testInput">programa de prueba</label>
+    <textarea id="testInput" class="small" spellcheck="false"></textarea>
+
+    <div class="row">
+      <button id="btnProbar" disabled>Probar cadena</button>
+      <span class="hint" id="testStatus">valida la especificación primero</span>
+    </div>
+
+    <div class="output" id="testOutput">
+      <div class="verdict" id="testVerdict"></div>
+      <details id="detTestTrace" open>
+        <summary>Traza de ejecución</summary>
+        <div class="log" id="testTrace"></div>
+      </details>
+    </div>
+    <div class="c2"></div>
+  </section>
+
+  <!-- ============ EQUIPO ============ -->
+  <div class="section-head" id="equipo">
+    <span class="fig">Fig. 04</span>
+    <h2>El equipo detrás del metacompilador</h2>
+    <p>Proyecto de Algoritmos y Estructuras de Datos — construido de punta a punta por:</p>
+  </div>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="avatar">MB</div>
+      <h4>Miguel Angel B.C.</h4>
+      <div class="role">Desarrollo</div>
+    </div>
+    <div class="team-card">
+      <div class="avatar">RT</div>
+      <h4>Roy Jesus Aldair T.C.</h4>
+      <div class="role">Desarrollo</div>
+    </div>
+    <div class="team-card">
+      <div class="avatar">TC</div>
+      <h4>Taylor Yampier C.I.</h4>
+      <div class="role">Desarrollo</div>
+    </div>
+  </div>
+
+  <footer>Todo corre en tu navegador — nada se envía a un servidor</footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
