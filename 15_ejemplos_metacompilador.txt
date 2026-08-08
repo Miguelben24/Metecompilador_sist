@@ -1,0 +1,757 @@
+==========================================================================
+ 15 EJEMPLOS PARA EL METACOMPILADOR — 5 chicos, 5 medianos, 5 grandes
+==========================================================================
+
+Cómo usarlos:
+  1. Copia el bloque "CONFIG.TXT" de un ejemplo en la Zona 1 y valida.
+  2. (Opcional) Genera el código C++ en la Zona 2.
+  3. Copia el bloque "PROGRAMA DE PRUEBA" del MISMO ejemplo en la Zona 3
+     y prueba -> debe salir "CADENA ACEPTADA".
+
+
+##########################################################################
+ CHICOS
+##########################################################################
+
+--------------------------------------------------------------------------
+ C1 — "Saludos"  (3 palabras clave)
+--------------------------------------------------------------------------
+--- CONFIG.TXT ---
+PC inipc
+    saludar 1,
+    despedir 2,
+    presentar 3
+finpc
+
+S inisim
+    ; 10
+finsim
+
+ITT
+    0 saludar 1,
+    1 ID 2,
+    2 ; 0,
+
+    0 despedir 3,
+    3 ID 4,
+    4 ; 0,
+
+    0 presentar 5,
+    5 ID 6,
+    6 ID 7,
+    7 ; 0
+FTT
+
+--- PROGRAMA DE PRUEBA ---
+saludar Ana ;
+despedir Luis ;
+presentar Ana Luis ;
+
+
+--------------------------------------------------------------------------
+ C2 — "Contador"  (3 palabras clave)
+--------------------------------------------------------------------------
+--- CONFIG.TXT ---
+PC inipc
+    iniciar 1,
+    incrementar 2,
+    mostrar 3
+finpc
+
+S inisim
+    ; 10
+finsim
+
+ITT
+    0 iniciar 1,
+    1 ID 2,
+    2 NUM 3,
+    3 ; 0,
+
+    0 incrementar 4,
+    4 ID 5,
+    5 ; 0,
+
+    0 mostrar 6,
+    6 ID 7,
+    7 ; 0
+FTT
+
+--- PROGRAMA DE PRUEBA ---
+iniciar contador 0 ;
+incrementar contador ;
+incrementar contador ;
+mostrar contador ;
+
+
+--------------------------------------------------------------------------
+ C3 — "Semaforo"  (5 palabras clave, con ramificación simple)
+--------------------------------------------------------------------------
+--- CONFIG.TXT ---
+PC inipc
+    cambiar 1,
+    rojo 2,
+    amarillo 3,
+    verde 4,
+    esperar 5
+finpc
+
+S inisim
+    ; 10
+finsim
+
+ITT
+    0 cambiar 1,
+    1 rojo 2,
+    1 amarillo 3,
+    1 verde 4,
+    2 ; 0,
+    3 ; 0,
+    4 ; 0,
+
+    0 esperar 5,
+    5 NUM 6,
+    6 ; 0
+FTT
+
+--- PROGRAMA DE PRUEBA ---
+cambiar rojo ;
+esperar 5 ;
+cambiar amarillo ;
+esperar 2 ;
+cambiar verde ;
+
+
+--------------------------------------------------------------------------
+ C4 — "Mascota"  (3 palabras clave)
+--------------------------------------------------------------------------
+--- CONFIG.TXT ---
+PC inipc
+    alimentar 1,
+    jugar 2,
+    dormir 3
+finpc
+
+S inisim
+    ; 10
+finsim
+
+ITT
+    0 alimentar 1,
+    1 ID 2,
+    2 ; 0,
+
+    0 jugar 3,
+    3 ID 4,
+    4 ; 0,
+
+    0 dormir 5,
+    5 NUM 6,
+    6 ; 0
+FTT
+
+--- PROGRAMA DE PRUEBA ---
+alimentar Firulais ;
+jugar Firulais ;
+dormir 8 ;
+
+
+--------------------------------------------------------------------------
+ C5 — "Notas"  (3 palabras clave, incluye comando sin argumentos)
+--------------------------------------------------------------------------
+--- CONFIG.TXT ---
+PC inipc
+    anotar 1,
+    borrar 2,
+    listar 3
+finpc
+
+S inisim
+    ; 10
+finsim
+
+ITT
+    0 anotar 1,
+    1 ID 2,
+    2 ; 0,
+
+    0 borrar 3,
+    3 ID 4,
+    4 ; 0,
+
+    0 listar 5,
+    5 ; 0
+FTT
+
+--- PROGRAMA DE PRUEBA ---
+anotar comprar_pan ;
+anotar estudiar ;
+borrar comprar_pan ;
+listar ;
+
+
+##########################################################################
+ MEDIANOS
+##########################################################################
+
+--------------------------------------------------------------------------
+ M1 — "TiendaOnline"  (7 palabras clave, con condicional)
+--------------------------------------------------------------------------
+--- CONFIG.TXT ---
+PC inipc
+    agregar 1,
+    quitar 2,
+    comprar 3,
+    si 4,
+    stock 5,
+    menor 6,
+    alerta 7
+finpc
+
+S inisim
+    ; 10
+finsim
+
+ITT
+    0 agregar 1,
+    1 ID 2,
+    2 NUM 3,
+    3 ; 0,
+
+    0 quitar 4,
+    4 ID 5,
+    5 NUM 6,
+    6 ; 0,
+
+    0 comprar 7,
+    7 ID 8,
+    8 ; 0,
+
+    0 si 9,
+    9 stock 10,
+    10 ID 11,
+    11 menor 12,
+    12 NUM 13,
+    13 alerta 14,
+    14 ; 0
+FTT
+
+--- PROGRAMA DE PRUEBA ---
+agregar manzanas 50 ;
+quitar manzanas 10 ;
+comprar manzanas ;
+si stock manzanas menor 20 alerta ;
+
+
+--------------------------------------------------------------------------
+ M2 — "ClimaSensor"  (7 palabras clave, condicional ramificado mayor/menor)
+--------------------------------------------------------------------------
+--- CONFIG.TXT ---
+PC inipc
+    medir 1,
+    temperatura 2,
+    si 3,
+    mayor 4,
+    menor 5,
+    alerta 6,
+    registrar 7
+finpc
+
+S inisim
+    ; 10
+finsim
+
+ITT
+    0 medir 1,
+    1 temperatura 2,
+    2 NUM 3,
+    3 ; 0,
+
+    0 si 4,
+    4 temperatura 5,
+    5 mayor 6,
+    6 NUM 7,
+    7 alerta 8,
+    8 ; 0,
+    5 menor 9,
+    9 NUM 10,
+    10 alerta 11,
+    11 ; 0,
+
+    0 registrar 12,
+    12 ID 13,
+    13 ; 0
+FTT
+
+--- PROGRAMA DE PRUEBA ---
+medir temperatura 35 ;
+si temperatura mayor 30 alerta ;
+medir temperatura 5 ;
+si temperatura menor 10 alerta ;
+registrar SensorNorte ;
+
+
+--------------------------------------------------------------------------
+ M3 — "Chatbot"  (6 palabras clave, con repetir)
+--------------------------------------------------------------------------
+--- CONFIG.TXT ---
+PC inipc
+    responder 1,
+    si 2,
+    pregunta 3,
+    igual 4,
+    entonces 5,
+    repetir 6
+finpc
+
+S inisim
+    ; 10
+finsim
+
+ITT
+    0 responder 1,
+    1 ID 2,
+    2 ; 0,
+
+    0 si 3,
+    3 pregunta 4,
+    4 igual 5,
+    5 ID 6,
+    6 entonces 7,
+    7 responder 8,
+    8 ID 9,
+    9 ; 0,
+
+    0 repetir 10,
+    10 NUM 11,
+    11 responder 12,
+    12 ID 13,
+    13 ; 0
+FTT
+
+--- PROGRAMA DE PRUEBA ---
+responder Hola ;
+si pregunta igual ComoEstas entonces responder Bien ;
+repetir 2 responder Gracias ;
+
+
+--------------------------------------------------------------------------
+ M4 — "Parqueo"  (7 palabras clave, incluye comando sin argumentos)
+--------------------------------------------------------------------------
+--- CONFIG.TXT ---
+PC inipc
+    entrar 1,
+    salir 2,
+    si 3,
+    espacios 4,
+    menor 5,
+    alarma 6,
+    contar 7
+finpc
+
+S inisim
+    ; 10
+finsim
+
+ITT
+    0 entrar 1,
+    1 ID 2,
+    2 ; 0,
+
+    0 salir 3,
+    3 ID 4,
+    4 ; 0,
+
+    0 si 5,
+    5 espacios 6,
+    6 menor 7,
+    7 NUM 8,
+    8 alarma 9,
+    9 ; 0,
+
+    0 contar 10,
+    10 ; 0
+FTT
+
+--- PROGRAMA DE PRUEBA ---
+entrar ABC123 ;
+entrar XYZ789 ;
+si espacios menor 5 alarma ;
+salir ABC123 ;
+contar ;
+
+
+--------------------------------------------------------------------------
+ M5 — "RecetaCocina"  (7 palabras clave)
+--------------------------------------------------------------------------
+--- CONFIG.TXT ---
+PC inipc
+    agregar 1,
+    ingrediente 2,
+    hornear 3,
+    si 4,
+    tiempo 5,
+    mayor 6,
+    listo 7
+finpc
+
+S inisim
+    ; 10
+finsim
+
+ITT
+    0 agregar 1,
+    1 ingrediente 2,
+    2 ID 3,
+    3 NUM 4,
+    4 ; 0,
+
+    0 hornear 5,
+    5 NUM 6,
+    6 ; 0,
+
+    0 si 7,
+    7 tiempo 8,
+    8 mayor 9,
+    9 NUM 10,
+    10 listo 11,
+    11 ; 0
+FTT
+
+--- PROGRAMA DE PRUEBA ---
+agregar ingrediente harina 500 ;
+agregar ingrediente azucar 200 ;
+hornear 40 ;
+si tiempo mayor 35 listo ;
+
+
+##########################################################################
+ GRANDES
+##########################################################################
+
+--------------------------------------------------------------------------
+ G1 — "SmartHome"  (10 palabras clave, condicional ramificado mayor/menor)
+--------------------------------------------------------------------------
+--- CONFIG.TXT ---
+PC inipc
+    encender 1,
+    apagar 2,
+    sensor 3,
+    temperatura 4,
+    si 5,
+    mayor 6,
+    menor 7,
+    activar 8,
+    alerta 9,
+    modo 10
+finpc
+
+S inisim
+    ; 50
+finsim
+
+ITT
+    0 encender 1,
+    1 ID 2,
+    2 ; 0,
+
+    0 apagar 3,
+    3 ID 4,
+    4 ; 0,
+
+    0 sensor 5,
+    5 ID 6,
+    6 temperatura 7,
+    7 NUM 8,
+    8 ; 0,
+
+    0 si 9,
+    9 temperatura 10,
+    10 ID 11,
+    11 mayor 12,
+    12 NUM 13,
+    13 activar 14,
+    14 ID 15,
+    15 ; 0,
+    11 menor 16,
+    16 NUM 17,
+    17 alerta 18,
+    18 ; 0,
+
+    0 modo 19,
+    19 ID 20,
+    20 ; 0
+FTT
+
+--- PROGRAMA DE PRUEBA ---
+encender LucesSala ;
+sensor Termostato temperatura 28 ;
+si temperatura Termostato mayor 25 activar AireAcondicionado ;
+sensor Termostato temperatura 15 ;
+si temperatura Termostato menor 18 alerta ;
+modo Nocturno ;
+apagar LucesSala ;
+
+
+--------------------------------------------------------------------------
+ G2 — "BancoSim"  (10 palabras clave, condicional ramificado menor/mayor)
+--------------------------------------------------------------------------
+--- CONFIG.TXT ---
+PC inipc
+    abrir 1,
+    cuenta 2,
+    depositar 3,
+    retirar 4,
+    si 5,
+    saldo 6,
+    menor 7,
+    mayor 8,
+    bloquear 9,
+    transferir 10
+finpc
+
+S inisim
+    ; 50
+finsim
+
+ITT
+    0 abrir 1,
+    1 cuenta 2,
+    2 ID 3,
+    3 NUM 4,
+    4 ; 0,
+
+    0 depositar 5,
+    5 ID 6,
+    6 NUM 7,
+    7 ; 0,
+
+    0 retirar 8,
+    8 ID 9,
+    9 NUM 10,
+    10 ; 0,
+
+    0 si 11,
+    11 saldo 12,
+    12 ID 13,
+    13 menor 14,
+    14 NUM 15,
+    15 bloquear 16,
+    16 ID 17,
+    17 ; 0,
+    13 mayor 18,
+    18 NUM 19,
+    19 transferir 20,
+    20 ID 21,
+    21 ID 22,
+    22 ; 0
+FTT
+
+--- PROGRAMA DE PRUEBA ---
+abrir cuenta A100 500 ;
+depositar A100 200 ;
+retirar A100 100 ;
+si saldo A100 menor 50 bloquear A100 ;
+si saldo A100 mayor 400 transferir A100 A200 ;
+
+
+--------------------------------------------------------------------------
+ G3 — "SpaceMission"  (11 palabras clave, doble condicional desde "si")
+--------------------------------------------------------------------------
+--- CONFIG.TXT ---
+PC inipc
+    nave 1,
+    combustible 2,
+    lanzar 3,
+    orbitar 4,
+    si 5,
+    oxigeno 6,
+    menor 7,
+    mayor 8,
+    alerta 9,
+    aterrizar 10,
+    tripulante 11
+finpc
+
+S inisim
+    ; 50
+finsim
+
+ITT
+    0 nave 1,
+    1 ID 2,
+    2 combustible 3,
+    3 NUM 4,
+    4 ; 0,
+
+    0 lanzar 5,
+    5 ID 6,
+    6 ; 0,
+
+    0 orbitar 7,
+    7 ID 8,
+    8 NUM 9,
+    9 ; 0,
+
+    0 tripulante 10,
+    10 ID 11,
+    11 ; 0,
+
+    0 si 12,
+    12 oxigeno 13,
+    13 ID 14,
+    14 menor 15,
+    15 NUM 16,
+    16 alerta 17,
+    17 ; 0,
+    12 combustible 18,
+    18 ID 19,
+    19 mayor 20,
+    20 NUM 21,
+    21 aterrizar 22,
+    22 ID 23,
+    23 ; 0
+FTT
+
+--- PROGRAMA DE PRUEBA ---
+nave Halcon combustible 100 ;
+lanzar Halcon ;
+orbitar Halcon 400 ;
+tripulante Comandante ;
+tripulante Ingeniera ;
+si oxigeno Halcon menor 20 alerta ;
+si combustible Halcon mayor 50 aterrizar Halcon ;
+
+
+--------------------------------------------------------------------------
+ G4 — "Torneo"  (10 palabras clave, condicional ramificado mayor/menor)
+--------------------------------------------------------------------------
+--- CONFIG.TXT ---
+PC inipc
+    jugador 1,
+    equipo 2,
+    punto 3,
+    si 4,
+    puntaje 5,
+    mayor 6,
+    menor 7,
+    ganador 8,
+    ronda 9,
+    registrar 10
+finpc
+
+S inisim
+    ; 50
+finsim
+
+ITT
+    0 jugador 1,
+    1 ID 2,
+    2 equipo 3,
+    3 ID 4,
+    4 ; 0,
+
+    0 punto 5,
+    5 ID 6,
+    6 NUM 7,
+    7 ; 0,
+
+    0 ronda 8,
+    8 NUM 9,
+    9 ; 0,
+
+    0 si 10,
+    10 puntaje 11,
+    11 ID 12,
+    12 mayor 13,
+    13 NUM 14,
+    14 ganador 15,
+    15 ID 16,
+    16 ; 0,
+    12 menor 17,
+    17 NUM 18,
+    18 registrar 19,
+    19 ID 20,
+    20 ; 0
+FTT
+
+--- PROGRAMA DE PRUEBA ---
+jugador Ana equipo Rojo ;
+jugador Luis equipo Azul ;
+ronda 1 ;
+punto Ana 15 ;
+punto Luis 8 ;
+si puntaje Ana mayor 10 ganador Ana ;
+si puntaje Luis menor 10 registrar Luis ;
+
+
+--------------------------------------------------------------------------
+ G5 — "RPGQuest"  (11 palabras clave, dos ramificaciones distintas:
+                    "mision X iniciar/completar" y "si nivel mayor/menor")
+--------------------------------------------------------------------------
+--- CONFIG.TXT ---
+PC inipc
+    personaje 1,
+    mision 2,
+    iniciar 3,
+    completar 4,
+    explorar 5,
+    si 6,
+    nivel 7,
+    mayor 8,
+    menor 9,
+    subir 10,
+    recompensa 11
+finpc
+
+S inisim
+    ; 50
+finsim
+
+ITT
+    0 personaje 1,
+    1 ID 2,
+    2 nivel 3,
+    3 NUM 4,
+    4 ; 0,
+
+    0 mision 5,
+    5 ID 6,
+    6 iniciar 7,
+    7 ; 0,
+    6 completar 8,
+    8 ; 0,
+
+    0 explorar 9,
+    9 ID 10,
+    10 ; 0,
+
+    0 si 11,
+    11 nivel 12,
+    12 ID 13,
+    13 mayor 14,
+    14 NUM 15,
+    15 subir 16,
+    16 ID 17,
+    17 ; 0,
+    13 menor 18,
+    18 NUM 19,
+    19 recompensa 20,
+    20 ID 21,
+    21 ; 0
+FTT
+
+--- PROGRAMA DE PRUEBA ---
+personaje Kael nivel 5 ;
+mision BosqueOscuro iniciar ;
+explorar BosqueOscuro ;
+si nivel Kael mayor 3 subir Kael ;
+mision BosqueOscuro completar ;
+si nivel Kael menor 10 recompensa Kael ;
+
+==========================================================================
+ Los 15 dieron "CADENA ACEPTADA en q0" al correr compilador_generado.cpp
+ real sobre su programa de prueba. Si algún día uno te marca error, casi
+ siempre es porque se pegó a medias (falta una coma, una línea del ITT,
+ o un finpc/finsim/FTT) — revisa que el bloque quedó completo.
+==========================================================================
